@@ -9,7 +9,7 @@ As part of `Deliverable ⓵ Development deployment: JWT Pizza`, start up the app
 | View home page                                      | home.jsx          |            none  |         none |
 | Register new user<br/>(t@jwt.com, pw: test)         |  register.jsx     |    [POST] /api/auth    | `INSERT INTO user (name, email, password) VALUES (?, ?, ?)` <br/>`INSERT INTO userRole (userId, role, objectId) VALUES (?, ?, ?)` |
 | Login new user<br/>(t@jwt.com, pw: test)            |login.jsx |[PUT] api/auth  | `INSERT INTO auth (token, userId) VALUES (?, ?) ON DUPLICATE KEY UPDATE token=token`|
-| Order pizza                                         |menu.jsx  |[POST]/api/order <br/> [GET]/api/user/me|`INSERT INTO dinerOrder (dinerId, franchiseId, storeId, date) VALUES (?, ?, ?, now())` <br\> `INSERT INTO orderItem (orderId, menuId, description, price) VALUES (?, ?, ?, ?)` <br/>|
+| Order pizza                                         |menu.jsx <br/> payment.jsx  |[POST]/api/order <br/> [GET]/api/user/me|`INSERT INTO dinerOrder (dinerId, franchiseId, storeId, date) VALUES (?, ?, ?, now())` <br\> `INSERT INTO orderItem (orderId, menuId, description, price) VALUES (?, ?, ?, ?)` <br/>|
 | View order pizza                                         |                    |[GET]/api/order/menu <br/> [GET]/api/franchise|              |
 | Verify pizza                                        |delivery.jsx|[POST]api/order/verify| none?|
 | View profile page                                   |diner-dashboard.jsx|[GET]/api/order|`SELECT userId FROM auth WHERE token=?`<br/>`SELECT id, franchiseId, storeId, date FROM dinerOrder WHERE dinerId=? LIMIT ${offset},${config.db.listPerPage}`<br/> `SELECT id, menuId, description, price FROM orderItem WHERE orderId=?`|
