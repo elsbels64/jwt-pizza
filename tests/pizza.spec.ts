@@ -14,25 +14,24 @@ async function basicInit(page: Page) {
   // Authorize login for the given user
   await page.route('*/**/api/auth', async (route) => {
     const loginReq = route.request().postDataJSON();
-    if(route.request().method()=== 'DELETE') {
-        expect(route.request().method()).toBe('DELETE');
-        await route.fulfill({ json: { message: 'logout successful' } });
-    }  if(route.request().method() ==='PUT') {  
-    const user = validUsers[loginReq.email];
-    if (!user || user.password !== loginReq.password) {
-      await route.fulfill({ status: 401, json: { error: 'Unauthorized' } });
-      return;
+    if (route.request().method() === 'DELETE') {
+      expect(route.request().method()).toBe('DELETE');
+      await route.fulfill({ json: { message: 'logout successful' } });
+    } if (route.request().method() === 'PUT') {
+      const user = validUsers[loginReq.email];
+      if (!user || user.password !== loginReq.password) {
+        await route.fulfill({ status: 401, json: { error: 'Unauthorized' } });
+        return;
+      }
+      loggedInUser = validUsers[loginReq.email];
+      const loginRes = {
+        user: loggedInUser,
+        token: 'abcdef',
+      };
+
+      await route.fulfill({ json: loginRes });
     }
-    loggedInUser = validUsers[loginReq.email];
-    const loginRes = {
-      user: loggedInUser,
-      token: 'abcdef',
-    };
-   
-        expect(route.request().method()).toBe('PUT');
-        await route.fulfill({ json: loginRes });
-    }   
-});
+  });
 
   // Return the currently logged in user
   await page.route('*/**/api/user/me', async (route) => {
@@ -140,40 +139,47 @@ test('purchase with login', async ({ page }) => {
 });
 
 test('register', async ({ page }) => {
-    let loggedInUser: User | undefined;
-    const validUsers: Record<string, User> = { 'new@jwt.com': { id: '4', name: 'New User', email: 'new@jwt.com', password: 'a', roles: [{ role: Role.Diner }] } };
+  let loggedInUser: User | undefined;
+  const validUsers: Record<string, User> = { 'new@jwt.com': { id: '4', name: 'New User', email: 'new@jwt.com', password: 'a', roles: [{ role: Role.Diner }] } };
 
-    // Authorize login for the given user
-    await page.route('*/**/api/auth', async (route) => {
-        const registerReq = route.request().postDataJSON();
-        const user = validUsers[registerReq.email];
-        if (!user || user.password !== registerReq.password) {
-        await route.fulfill({ status: 401, json: { error: 'Unauthorized' } });
-        return;
-        }
-        loggedInUser = validUsers[registerReq.email];
-        const loginRes = {
-        user: loggedInUser,
-        token: 'abcdef',
-        };
-        expect(route.request().method()).toBe('POST');
-        await route.fulfill({ json: loginRes });
-    });
-
-    await page.goto('/');
-    await page.getByRole('link', { name: 'Register' }).click();
-    await page.getByRole('textbox', { name: 'Name' }).fill('New User');
-    await page.getByRole('textbox', { name: 'Email address' }).fill('new@jwt.com');
-    await page.getByRole('textbox', { name: 'Password' }).fill('a');
-    await page.getByRole('button', { name: 'Register' }).click();  
-
-    await expect(page.getByRole('link', { name: 'NU' })).toBeVisible();
+  // Authorize login for the given user
+  await page.route('*/**/api/auth', async (route) => {
+    const registerReq = route.request().postDataJSON();
+    const user = validUsers[registerReq.email];
+    if (!user || user.password !== registerReq.password) {
+      await route.fulfill({ status: 401, json: { error: 'Unauthorized' } });
+      return;
+    }
+    loggedInUser = validUsers[registerReq.email];
+    const loginRes = {
+      user: loggedInUser,
+      token: 'abcdef',
+    };
+    expect(route.request().method()).toBe('POST');
+    await route.fulfill({ json: loginRes });
   });
 
-  test('logout', async ({ page }) => {
-    await basicInit(page);
-    await page.getByRole('button', { name: 'Logout' }).click();
-    
-    
-    await expect(page.getByRole('link', { name: 'Login' })).toBeVisible();
-    });
+  await page.goto('/');
+  await page.getByRole('link', { name: 'Register' }).click();
+  await page.getByRole('textbox', { name: 'Name' }).fill('New User');
+  await page.getByRole('textbox', { name: 'Email address' }).fill('new@jwt.com');
+  await page.getByRole('textbox', { name: 'Password' }).fill('a');
+  await page.getByRole('button', { name: 'Register' }).click();
+
+  await expect(page.getByRole('link', { name: 'NU' })).toBeVisible();
+});
+
+test('logout', async ({ page }) => {
+  await basicInit(page);
+   await page.getByRole('link', { name: 'Login' }).click();
+  await page.getByRole('textbox', { name: 'Email address' }).fill('d@jwt.com');
+  await page.getByRole('textbox', { name: 'Password' }).fill('a');
+  await page.getByRole('button', { name: 'Login' }).click();
+
+  await page.getByRole('link', { name: 'Logout' }).click();
+
+  await expect(page.locator('#navbar-dark')).toMatchAriaSnapshot(`
+    - link "Register":
+      - /url: /register
+    `);
+});
