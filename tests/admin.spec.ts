@@ -45,7 +45,7 @@ async function basicInit(page: Page) {
     if (route.request().method() === 'GET') {
       if (route.request().url().includes('name=') && route.request().url().split('name=')[1] !== '*') {
         const url = new URL(route.request().url());
-        const rawFilter = url.searchParams.get('name')||'';
+        const rawFilter = url.searchParams.get('name') || '';
 
         const pattern = new RegExp(
           '^' + rawFilter.replace(/\*/g, '.*') + '$'
@@ -69,14 +69,30 @@ async function basicInit(page: Page) {
       franchises = franchises.sort((a, b) => a.name.localeCompare(b.name));
       await route.fulfill({ json: newFranchise });
     } else if (route.request().method() === 'DELETE') {
-      // DELETE /api/franchise/12 HTTP/1.1
-      // {"message":"franchise deleted"}
       const url = route.request().url();
-      const idToDelete = route.request().url().match(/\/(\d+)(\?|$)/)?.[1];
-      franchises = franchises.filter(f => String(f.id) !== String(idToDelete));
-      await route.fulfill({ json: { message: 'franchise deleted' } });
+      if (route.request().url().includes('/store/')) {
+        // DELETE /api/franchise/1/store/1 HTTP/1.1
+        //{"message":"store deleted"}
+        //{"franchises":[{"id":1,"name":"pizzaPocket","admins":[{"id":4,"name":"pizza franchisee","email":"f@jwt.com"}],"stores":[]}],"more":false}
+        const ids = url.match(/\/franchise\/(\d+)\/store\/(\d+)/);
+        const franchiseId = ids?.[1];
+        const storeId = ids?.[2];
+        const franchise = franchises.find(f => String(f.id) === String(franchiseId));
+        if (franchise) {
+          franchise.stores = franchise.stores.filter(s => String(s.id) !== String(storeId));
+        }
+        await route.fulfill({ json: { message: 'store deleted' } });
+      } else {
+        // DELETE /api/franchise/12 HTTP/1.1
+        // {"message":"franchise deleted"}
+        const idToDelete = route.request().url().match(/\/(\d+)(\?|$)/)?.[1];
+        franchises = franchises.filter(f => String(f.id) !== String(idToDelete));
+        await route.fulfill({ json: { message: 'franchise deleted' } });
+      }
     }
   });
+
+
 
   await page.goto('/');
 }
@@ -124,6 +140,14 @@ test('login admin and open admin page and add franchise', async ({ page }) => {
   await expect(page.getByRole('main')).toContainText('New Franchise');
   await page.getByRole('button', { name: 'Close' }).click();
   await expect(page.getByRole('table')).toContainText('pizzaPocket');
+
+  await page.getByRole('row', { name: 'SLC 0 ₿ Close' }).getByRole('button').click();
+  await expect(page.getByRole('heading')).toContainText('Sorry to see you go');
+  await expect(page.getByRole('main')).toContainText('pizzaPocket');
+  await expect(page.getByRole('main')).toContainText('SLC');
+  await page.getByRole('button', { name: 'Close' }).click();
+  await expect(page.locator('tbody')).not.toContainText('SLC');
+
   await expect(page.getByRole('table')).not.toContainText('New Franchise');
   await page.getByRole('link', { name: 'Logout' }).click();
   await expect(page.locator('#navbar-dark')).toContainText('Login');
