@@ -106,10 +106,6 @@ test("Franchisee can login and view their franchises and stores", async ({ page 
     await expect(page.getByRole('main')).toContainText('new store');
     await page.getByRole('button', { name: 'Close' }).click();
     await expect(page.locator('tbody')).toContainText('SLC');
-
-    // // logout
-    // await page.getByRole('link', { name: 'Logout' }).click();    
-
 });
 
 // test.describe('Franchisee dashboard', () => {
