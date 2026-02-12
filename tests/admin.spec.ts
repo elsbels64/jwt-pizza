@@ -50,10 +50,14 @@ async function basicInit(page: Page) {
       };
       await route.fulfill({ json: franchiseRes });
     } else if (route.request().method() === 'POST') {
-      const newFranchise = {stores:[],id:'12',name:'New Franchise',admins:[{email:"f@jwt.com",id:4,name:"pizza franchisee"}]};
+      const newFranchise = {id:'12',name:'New Franchise',admins:[{email:"f@jwt.com",id:'4',name:"pizza franchisee"}],stores:[]};
       franchises.push(newFranchise);
       await route.fulfill({ json: newFranchise });
-      
+    } else if (route.request().method() === 'DELETE') {
+      const url = route.request().url();
+      const idToDelete = url.split('/').pop();
+      franchises = franchises.filter(f => f.id !== idToDelete);
+      await route.fulfill({ json: { message: 'Franchise deleted' } });
     }
   });
 
@@ -77,13 +81,13 @@ test('login admin and open admin page', async ({ page }) => {
   await expect(page.locator('h3')).toContainText('Franchises');
   
   //add a franchise
-  // await page.getByRole('button', { name: 'Add Franchise' }).click();
-  // await page.getByRole('textbox', { name: 'franchise name' }).click();
-  // await page.getByRole('textbox', { name: 'franchise name' }).fill('New Franchise');
-  // await page.getByRole('textbox', { name: 'franchisee admin email' }).click();
-  // await page.getByRole('textbox', { name: 'franchisee admin email' }).fill('f@jwt.com');
-  // await page.getByRole('button', { name: 'Create' }).click();
-  // await expect(page.getByRole('table')).toContainText('New Franchise');
+  await page.getByRole('button', { name: 'Add Franchise' }).click();
+  await page.getByRole('textbox', { name: 'franchise name' }).click();
+  await page.getByRole('textbox', { name: 'franchise name' }).fill('New Franchise');
+  await page.getByRole('textbox', { name: 'franchisee admin email' }).click();
+  await page.getByRole('textbox', { name: 'franchisee admin email' }).fill('f@jwt.com');
+  await page.getByRole('button', { name: 'Create' }).click();
+  await expect(page.getByRole('table')).toContainText('New Franchise');
 
   // //filter franchises
   // await page.getByRole('textbox', { name: 'Filter franchises' }).click();
