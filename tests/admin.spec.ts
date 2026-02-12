@@ -3,13 +3,13 @@ import { Role, User } from '../src/service/pizzaService';
 
 async function basicInit(page: Page) {
   let loggedInUser: User | undefined;
-  const validUsers: Record<string, User> = {"a@jwt.com":{id:'1',name:"常用名字",email:"a@jwt.com",password:"admin",roles:([{role:Role.Admin}])}};
+  const validUsers: Record<string, User> = { "a@jwt.com": { id: '1', name: "常用名字", email: "a@jwt.com", password: "admin", roles: ([{ role: Role.Admin }]) } };
   let franchises = [
     {
       id: '1',
       name: 'pizzaPocket',
-      admins:[{id:'4',name:"pizza franchisee",email:"f@jwt.com"}],
-      stores:[{id:'1',name:"SLC",totalRevenue:0}]
+      admins: [{ id: '4', name: "pizza franchisee", email: "f@jwt.com" }],
+      stores: [{ id: '1', name: "SLC", totalRevenue: 0 }]
     }
   ];
 
@@ -43,14 +43,28 @@ async function basicInit(page: Page) {
   //return franchises
   await page.route('*/**/api/franchise*', async (route) => {
     if (route.request().method() === 'GET') {
-  
-      const franchiseRes = {
-        franchises: franchises,
-        more:false
-      };
-      await route.fulfill({ json: franchiseRes });
+      if (route.request().url().includes('name=') && route.request().url().split('name=')[1] !== '*') {
+        const url = new URL(route.request().url());
+        const rawFilter = url.searchParams.get('name')||'';
+
+        const pattern = new RegExp(
+          '^' + rawFilter.replace(/\*/g, '.*') + '$'
+        );
+
+        const filteredFranchises = franchises.filter(f =>
+          pattern.test(f.name)
+        );
+        await route.fulfill({ json: { franchises: filteredFranchises, more: false } });
+      } else {
+
+        const franchiseRes = {
+          franchises: franchises,
+          more: false
+        };
+        await route.fulfill({ json: franchiseRes });
+      }
     } else if (route.request().method() === 'POST') {
-      const newFranchise = {id:'12',name:'New Franchise',admins:[{email:"f@jwt.com",id:'4',name:"pizza franchisee"}],stores:[]};
+      const newFranchise = { id: '12', name: 'New Franchise', admins: [{ email: "f@jwt.com", id: '4', name: "pizza franchisee" }], stores: [] };
       franchises.push(newFranchise);
       await route.fulfill({ json: newFranchise });
     } else if (route.request().method() === 'DELETE') {
@@ -66,7 +80,7 @@ async function basicInit(page: Page) {
 
 
 
-test('login admin and open admin page', async ({ page }) => {
+test('login admin and open admin page and add franchise', async ({ page }) => {
   basicInit(page);
   //login admin
   await page.getByRole('link', { name: 'Login' }).click();
@@ -75,11 +89,11 @@ test('login admin and open admin page', async ({ page }) => {
   await page.getByRole('textbox', { name: 'Password' }).click();
   await page.getByRole('textbox', { name: 'Password' }).fill('admin');
   await page.getByRole('button', { name: 'Login' }).click();
-  
+
   //go to admin page
   await page.getByRole('link', { name: 'Admin' }).click();
   await expect(page.locator('h3')).toContainText('Franchises');
-  
+
   //add a franchise
   await page.getByRole('button', { name: 'Add Franchise' }).click();
   await page.getByRole('textbox', { name: 'franchise name' }).click();
@@ -89,17 +103,19 @@ test('login admin and open admin page', async ({ page }) => {
   await page.getByRole('button', { name: 'Create' }).click();
   await expect(page.getByRole('table')).toContainText('New Franchise');
 
+
   // //filter franchises
-  // await page.getByRole('textbox', { name: 'Filter franchises' }).click();
-  // await page.getByRole('textbox', { name: 'Filter franchises' }).fill('pizzaPocket');
-  // await page.getByRole('button', { name: 'Submit' }).click();
-  // await expect(page.locator('tbody')).toContainText('pizzaPocket');
-  // await page.getByRole('textbox', { name: 'Filter franchises' }).dblclick();
-  // await page.getByRole('textbox', { name: 'Filter franchises' }).fill('');
-  // await page.getByRole('button', { name: 'Submit' }).click();
+  await page.getByRole('textbox', { name: 'Filter franchises' }).click();
+  await page.getByRole('textbox', { name: 'Filter franchises' }).fill('pizzaPocket');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await expect(page.locator('tbody')).toContainText('pizzaPocket');
+  await expect(page.getByRole('table')).not.toContainText('New Franchise');
+  await page.getByRole('textbox', { name: 'Filter franchises' }).dblclick();
+  await page.getByRole('textbox', { name: 'Filter franchises' }).fill('');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await expect(page.getByRole('table')).toContainText('New Franchise');
 
   // //delete a franchise
-  // await expect(page.getByRole('table')).toContainText('New Franchise');
   // await page.getByRole('row', { name: 'New Franchise pizza diner' }).getByRole('button').click();
   // await expect(page.getByRole('heading')).toContainText('Sorry to see you go');
   // await page.getByRole('button', { name: 'Close' }).click();
