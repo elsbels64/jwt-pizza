@@ -24,3 +24,14 @@ As part of `Deliverable ⓵ Development deployment: JWT Pizza`, start up the app
 | View Admin page                                     |adminDashboard.tsx|[GET]/api/franchise|`SELECT id, name FROM franchise WHERE name LIKE ? LIMIT ${limit + 1} OFFSET ${offset}`<br/>`SELECT u.id, u.name, u.email FROM userRole AS ur JOIN user AS u ON u.id=ur.userId WHERE ur.objectId=? AND ur.role='franchisee'`<br/>`SELECT s.id, s.name, COALESCE(SUM(oi.price), 0) AS totalRevenue FROM dinerOrder AS do JOIN orderItem AS oi ON do.id=oi.orderId RIGHT JOIN store AS s ON s.id=do.storeId WHERE s.franchiseId=? GROUP BY s.id`<br/>|
 | Create a franchise for t@jwt.com                    |  adminDashboard/createFranchise.tsx|[POST]]/api/franchise |`SELECT id, name FROM user WHERE email=?`<br/>`INSERT INTO franchise (name) VALUES (?)`<br/>`INSERT INTO userRole (userId, role, objectId) VALUES (?, ?, ?)`|
 | Close the franchise for t@jwt.com                   |adminDashboard/closeFranchise.tsx|[DELETE]/api/franchise/${franchise.id} |`DELETE FROM store WHERE franchiseId=?`<br/>`DELETE FROM userRole WHERE objectId=?`<br/>`DELETE FROM franchise WHERE id=?`<br/>|
+
+
+
+
+# how to veiw request and responses sent:
+Steps to View Request Response in Chrome:
+Open DevTools: Press F12 or Ctrl+Shift+I (Windows/Linux) / Cmd+Option+I (Mac).
+Navigate to Network: Click the Network tab to see requests.
+Filter (Optional): Click "XHR" or "Fetch" to find API calls.
+Select Request: Click on the specific request name.
+View Data: Click the Response tab for the raw data or Preview for a structured view. 
