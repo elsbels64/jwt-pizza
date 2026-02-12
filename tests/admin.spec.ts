@@ -127,7 +127,7 @@ test('login admin and open admin page and add franchise', async ({ page }) => {
   await page.getByRole('textbox', { name: 'Filter franchises' }).click();
   await page.getByRole('textbox', { name: 'Filter franchises' }).fill('pizzaPocket');
   await page.getByRole('button', { name: 'Submit' }).click();
-  await expect(page.locator('tbody')).toContainText('pizzaPocket');
+  await expect(page.getByRole('table')).toContainText('pizzaPocket');
   await expect(page.getByRole('table')).not.toContainText('New Franchise');
   await page.getByRole('textbox', { name: 'Filter franchises' }).dblclick();
   await page.getByRole('textbox', { name: 'Filter franchises' }).fill('');
