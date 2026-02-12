@@ -49,6 +49,11 @@ async function basicInit(page: Page) {
         more:false
       };
       await route.fulfill({ json: franchiseRes });
+    } else if (route.request().method() === 'POST') {
+      const newFranchise = {stores:[],id:'12',name:'New Franchise',admins:[{email:"f@jwt.com",id:4,name:"pizza franchisee"}]};
+      franchises.push(newFranchise);
+      await route.fulfill({ json: newFranchise });
+      
     }
   });
 
@@ -76,7 +81,7 @@ test('login admin and open admin page', async ({ page }) => {
   // await page.getByRole('textbox', { name: 'franchise name' }).click();
   // await page.getByRole('textbox', { name: 'franchise name' }).fill('New Franchise');
   // await page.getByRole('textbox', { name: 'franchisee admin email' }).click();
-  // await page.getByRole('textbox', { name: 'franchisee admin email' }).fill('d@jwt.com');
+  // await page.getByRole('textbox', { name: 'franchisee admin email' }).fill('f@jwt.com');
   // await page.getByRole('button', { name: 'Create' }).click();
   // await expect(page.getByRole('table')).toContainText('New Franchise');
 
