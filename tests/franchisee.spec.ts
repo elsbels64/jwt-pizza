@@ -4,18 +4,20 @@ import { Role, User } from '../src/service/pizzaService';
 async function basicInit(page: Page) {
     let loggedInUser: User | undefined;
     const validUsers: Record<string, User> = { "f@jwt.com": { id: '4', name: "pizza franchisee", email: "f@jwt.com", password: "franchisee", roles: ([{ role: Role.Franchisee }]) } };
-
+  
     //PUT /api/auth HTTP/1.1
     // {"user":{"id":4,"name":"pizza franchisee","email":"f@jwt.com","roles":[{"role":"diner"},{"objectId":1,"role":"franchisee"}]},"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwibmFtZSI6InBpenphIGZyYW5jaGlzZWUiLCJlbWFpbCI6ImZAand0LmNvbSIsInJvbGVzIjpbeyJyb2xlIjoiZGluZXIifSx7Im9iamVjdElkIjoxLCJyb2xlIjoiZnJhbmNoaXNlZSJ9XSwiaWF0IjoxNzcwODcwMjc0fQ.gXCU7dkTuzWJ6nhPPFz8Fd0lGRsfp50moNiVfoFyruI"}
 
-    let franchise = {
-        id: '1',
-        name: 'pizzaPocket',
-        admins: [{ id: '4', name: "pizza franchisee", email: "f@jwt.com" }],
-        stores: [{ id: '1', name: "SLC", totalRevenue: 0 }]
-    };
+    let franchises = [
+    {
+      id: '1',
+      name: 'pizzaPocket',
+      admins: [{ id: '4', name: "pizza franchisee", email: "f@jwt.com" }],
+      stores: [{ id: '1', name: "SLC", totalRevenue: 0 }]
+    }
+  ];
 
-    await page.route('*/**/api/auth**', async (route) => {
+    await page.route('*/**/api/auth', async (route) => {
         const loginReq = route.request().postDataJSON();
         if (route.request().method() === 'DELETE') {
             expect(route.request().method()).toBe('DELETE');
@@ -47,8 +49,14 @@ async function basicInit(page: Page) {
 
     await page.route('*/**/api/franchise**', async (route) => {
         if (route.request().method() === 'GET') {
-            await route.fulfill({ json: franchise });
+            if (route.request().url().includes("4")) {
+            await route.fulfill( {json: franchises} );
+            } else {
+                await route.fulfill({ json: { franchises, more: false } });
+            }
+            return;
         }
+
 
 
         // POST /api/franchise/1/store HTTP/1.1
@@ -64,6 +72,8 @@ async function basicInit(page: Page) {
 
 
     });
+
+    await page.goto('/');
 };
 
 test("Franchisee can login and view their franchises and stores", async ({ page }) => {
