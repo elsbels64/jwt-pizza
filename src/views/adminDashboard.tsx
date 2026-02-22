@@ -27,8 +27,8 @@ export default function AdminDashboard(props: Props) {
     setUsersMore(result.more);
   }
 
-  async function deleteUser(user: User) {
-    await pizzaService.deleteUser(user);
+  async function deleteUser(deleteUser: User) {
+    await pizzaService.deleteUser(deleteUser);
     await loadUsers(userPage, filterUserRef.current?.value || '*');
   }
 

@@ -81,6 +81,12 @@ async listUsers(page: number = 1, limit: number = 10, name: string = '*'): Promi
   return { users, more: users.length === limit };
 }
 
+async deleteUser(user: User): Promise<void> {
+  await this.callEndpoint(`/api/user/${user.id}`, 'DELETE');
+  localStorage.removeItem('token');
+  return Promise.resolve();
+}
+
   async getMenu(): Promise<Menu> {
     return this.callEndpoint('/api/order/menu');
   }
