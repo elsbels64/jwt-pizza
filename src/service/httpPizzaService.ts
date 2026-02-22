@@ -83,7 +83,6 @@ async listUsers(page: number = 1, limit: number = 10, name: string = '*'): Promi
 
 async deleteUser(user: User): Promise<void> {
   await this.callEndpoint(`/api/user/${user.id}`, 'DELETE');
-  localStorage.removeItem('token');
   return Promise.resolve();
 }
 
