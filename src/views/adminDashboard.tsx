@@ -16,12 +16,38 @@ export default function AdminDashboard(props: Props) {
   const [franchiseList, setFranchiseList] = React.useState<FranchiseList>({ franchises: [], more: false });
   const [franchisePage, setFranchisePage] = React.useState(0);
   const filterFranchiseRef = React.useRef<HTMLInputElement>(null);
+  const [users, setUsers] = React.useState<User[]>([]);
+  const [usersMore, setUsersMore] = React.useState(false);
+  const [userPage, setUserPage] = React.useState(1);
+  const filterUserRef = React.useRef<HTMLInputElement>(null);
+
+  async function loadUsers(page: number, name: string = '*') {
+    const result = await pizzaService.listUsers(page, 10, name);
+    setUsers(result.users);
+    setUsersMore(result.more);
+  }
+
+  async function deleteUser(user: User) {
+    await pizzaService.deleteUser(user);
+    await loadUsers(userPage, filterUserRef.current?.value || '*');
+  }
+
+  async function filterUsers() {
+    setUserPage(1);
+    await loadUsers(1, `*${filterUserRef.current?.value || ''}*`);
+  }
 
   React.useEffect(() => {
     (async () => {
       setFranchiseList(await pizzaService.getFranchises(franchisePage, 3, '*'));
     })();
   }, [props.user, franchisePage]);
+
+  React.useEffect(() => {
+    if (Role.isRole(props.user, Role.Admin)) {
+      loadUsers(userPage);
+    }
+  }, [props.user, userPage]);
 
   function createFranchise() {
     navigate('/admin-dashboard/create-franchise');
@@ -43,6 +69,62 @@ export default function AdminDashboard(props: Props) {
   if (Role.isRole(props.user, Role.Admin)) {
     response = (
       <View title="Mama Ricci's kitchen">
+      <div className="text-start py-8 px-4 sm:px-6 lg:px-8">
+          <h3 className="text-neutral-100 text-xl">Users</h3>
+          <div className="bg-neutral-100 overflow-clip my-4">
+            <div className="flex flex-col">
+              <div className="-m-1.5 overflow-x-auto">
+                <div className="p-1.5 min-w-full inline-block align-middle">
+                  <div className="overflow-hidden">
+                    <table className="min-w-full divide-y divide-gray-200">
+                      <thead className="uppercase text-neutral-100 bg-slate-400 border-b-2 border-gray-500">
+                        <tr>
+                          {['Name', 'Email', 'Role', ''].map((header) => (
+                            <th key={header} scope="col" className="px-6 py-3 text-start text-xs font-medium">
+                              {header}
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-200">
+                        {users.map((u, index) => (
+                          <tr key={index} className="hover:bg-gray-100">
+                            <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-800">{u.name}</td>
+                            <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-800">{u.email}</td>
+                            <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-800">{u.roles?.map((r) => r.role).join(', ')}</td>
+                            <td className="px-6 py-2 whitespace-nowrap text-end text-sm font-medium">
+                              <button type="button" className="text-gray-400 hover:text-red-600" onClick={() => deleteUser(u)}>
+                                ✕
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                      <tfoot>
+                        <tr>
+                          <td className="px-1 py-1" colSpan={2}>
+                            <input type="text" ref={filterUserRef} placeholder="Name" className="px-2 py-1 text-sm border border-gray-300 rounded-lg" />
+                            <button type="button" className="ml-2 px-2 py-1 text-sm font-semibold rounded-lg border border-orange-400 text-orange-400 hover:border-orange-800 hover:text-orange-800" onClick={filterUsers}>
+                              Search
+                            </button>
+                          </td>
+                          <td colSpan={2} className="text-end text-sm font-medium">
+                            <button className="w-12 p-1 text-sm font-semibold rounded-lg border border-transparent bg-white text-grey border-grey m-1 hover:bg-orange-200 disabled:bg-neutral-300" onClick={() => setUserPage(userPage - 1)} disabled={userPage <= 1}>
+                              «
+                            </button>
+                            <button className="w-12 p-1 text-sm font-semibold rounded-lg border border-transparent bg-white text-grey border-grey m-1 hover:bg-orange-200 disabled:bg-neutral-300" onClick={() => setUserPage(userPage + 1)} disabled={!usersMore}>
+                              »
+                            </button>
+                          </td>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <div className="text-start py-8 px-4 sm:px-6 lg:px-8">
           <h3 className="text-neutral-100 text-xl">Franchises</h3>
           <div className="bg-neutral-100 overflow-clip my-4">
