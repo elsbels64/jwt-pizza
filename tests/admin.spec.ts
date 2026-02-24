@@ -275,9 +275,10 @@ test('login admin and open admin page and add franchise', async ({ page }) => {
   await expect(page.getByRole('main')).toContainText('pizzaPocket');
   await expect(page.getByRole('main')).toContainText('SLC');
   await page.getByRole('button', { name: 'Close' }).click();
-  await expect(
-  page.getByText('FranchisesFranchiseFranchiseeStoreRevenueAction').locator('..').locator('tbody')
-).not.toContainText('SLC');
+  const franchiseTable = page.locator('table', { 
+  has: page.getByRole('columnheader', { name: 'Franchisee' }) 
+});
+await expect(franchiseTable.locator('tbody')).not.toContainText('SLC');
 
   await expect(page.getByRole('main')).not.toContainText('New Franchise');
   // await page.getByRole('link', { name: 'Logout' }).click();
