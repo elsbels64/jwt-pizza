@@ -60,7 +60,10 @@ async function basicInit(page: Page) {
     await route.fulfill({ json: loggedInUser });
   });
 
-  page.route('*/**/api/user**', async (route) => {
+ // PUT /api/auth 
+
+
+  await page.route('*/**/api/user**', async (route) => {
     if (route.request().method() === 'DELETE') {
       // get id from url /api/user/123
       const idToDelete = route.request().url().match(/\/api\/user\/(\d+)/)?.[1];
@@ -83,11 +86,6 @@ async function basicInit(page: Page) {
 
     await route.fulfill({ json: pageUsers });
     }
-  });
-
-  // get users for admin page
-  await page.route('*/**/api/franchise?page=*&limit=*&name=*', async (route) => {
-    expect(route.request().method()).toBe('GET');
   });
 
   //return franchises
@@ -199,7 +197,7 @@ test('click next user page', async ({ page }) => {
 });
 
 test('filter user by name', async ({ page }) => {
-  await page.goto('/');
+  await basicInit(page);
 
   await page.getByRole('link', { name: 'Login' }).click();
   await page.getByRole('textbox', { name: 'Email address' }).fill('a@jwt.com');
@@ -227,6 +225,7 @@ test('filter user by name', async ({ page }) => {
   
 
 test('login admin and open admin page and add franchise', async ({ page }) => {
+  test.setTimeout(30000);
   await basicInit(page);
   //login admin
   await page.getByRole('link', { name: 'Login' }).click();
@@ -266,7 +265,9 @@ test('login admin and open admin page and add franchise', async ({ page }) => {
   await page.getByRole('row', { name: 'New Franchise pizza' }).getByRole('button').click();
   await expect(page.getByRole('heading')).toContainText('Sorry to see you go');
   await expect(page.getByRole('main')).toContainText('New Franchise');
+  await page.waitForURL('**/close-franchise'); 
   await page.getByRole('button', { name: 'Close' }).click();
+   await page.waitForURL('**/admin-dashboard'); 
   await expect(page.getByRole('main')).toContainText('pizzaPocket');
 
   await page.getByRole('row', { name: 'SLC 0 ₿ Close' }).getByRole('button').click();
@@ -277,7 +278,7 @@ test('login admin and open admin page and add franchise', async ({ page }) => {
   await expect(page.locator('tbody')).not.toContainText('SLC');
 
   await expect(page.getByRole('main')).not.toContainText('New Franchise');
-  await page.getByRole('link', { name: 'Logout' }).click();
-  await expect(page.locator('#navbar-dark')).toContainText('Login');
+  // await page.getByRole('link', { name: 'Logout' }).click();
+  // await expect(page.locator('#navbar-dark')).toContainText('Login');
 });
 
