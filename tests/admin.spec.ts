@@ -276,7 +276,7 @@ test('login admin and open admin page and add franchise', async ({ page }) => {
   await expect(page.getByRole('main')).toContainText('SLC');
   await page.getByRole('button', { name: 'Close' }).click();
   await expect(
-  page.locator('table').filter({ hasText: 'Franchise Name' }).locator('tbody')
+  page.getByText('FranchisesFranchiseFranchiseeStoreRevenueAction').locator('..').locator('tbody')
 ).not.toContainText('SLC');
 
   await expect(page.getByRole('main')).not.toContainText('New Franchise');
