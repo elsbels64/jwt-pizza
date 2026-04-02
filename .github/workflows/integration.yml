@@ -46,7 +46,7 @@ jobs:
 
       - name: Override frontend env for integration tests
         run: |
-          echo "VITE_PIZZA_SERVICE_URL=http://localhost:3000" > .env.local
+          echo "VITE_PIZZA_SERVICE_URL=http://127.0.0.1:3000" > .env.local
           echo "VITE_PIZZA_FACTORY_URL=https://pizza-factory.cs329.click" >> .env.local
 
       - name: Install backend dependencies
@@ -85,7 +85,7 @@ jobs:
           PORT: 3000
 
       - name: Wait for backend to be ready
-        run: npx wait-on http://localhost:3000 --timeout 30000
+        run: npx wait-on http://127.0.0.1:3000 --timeout 30000
         continue-on-error: true  # don't stop here so we can see the logs
 
       - name: Check backend binding
