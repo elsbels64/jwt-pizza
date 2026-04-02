@@ -108,13 +108,20 @@ jobs:
           };" > jwt-pizza-service/src/config.js
 
       - name: Start backend server
-        run: npm start &
+        run: npm start > /tmp/backend.log 2>&1 &
         working-directory: jwt-pizza-service
         env:
           PORT: 3000
 
       - name: Wait for backend to be ready
         run: npx wait-on http://localhost:3000 --timeout 30000
+        continue-on-error: true  # don't stop here so we can see the logs
+
+      - name: Print backend logs
+        run: cat /tmp/backend.log
+
+      - name: Fail if backend never started
+        run: npx wait-on http://localhost:3000 --timeout 5000
 
       - name: Run integration tests
         run: |
