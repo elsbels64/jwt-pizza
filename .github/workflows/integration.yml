@@ -125,6 +125,13 @@ jobs:
             -H 'Content-Type: application/json' \
             -d '{"email":"a@jwt.com","password":"admin"}'
 
+      - name: Test OPTIONS preflight
+        run: |
+          curl -v -X OPTIONS http://localhost:3000/api/auth \
+            -H 'Origin: http://localhost:5173' \
+            -H 'Access-Control-Request-Method: PUT' \
+            -H 'Access-Control-Request-Headers: Content-Type'
+
       - name: Run integration tests
         run: |
           npx playwright install --with-deps chromium
