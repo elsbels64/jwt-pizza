@@ -89,6 +89,16 @@ jobs:
           chmod +x jwt-pizza-service/generatePizzaData.sh
           jwt-pizza-service/generatePizzaData.sh http://localhost:3000
 
+      - name: Verify seed data
+        run: |
+          echo "Checking admin user exists..."
+          curl -s -X PUT http://localhost:3000/api/auth \
+            -d '{"email":"a@jwt.com", "password":"admin"}' \
+            -H 'Content-Type: application/json'
+          echo ""
+          echo "Checking menu exists..."
+          curl -s http://localhost:3000/api/order/menu
+
       - name: Print backend logs
         run: cat /tmp/backend.log
 
