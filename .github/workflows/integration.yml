@@ -83,6 +83,10 @@ jobs:
         run: npx wait-on http://localhost:3000 --timeout 30000
         continue-on-error: true  # don't stop here so we can see the logs
       
+      - name: Check database state
+        run: |
+          mysql -h 127.0.0.1 -u root -ptempdbpassword -e "USE pizza; SELECT * FROM user;" 2>/dev/null || echo "No pizza database or user table yet"
+      
       - name: Seed database
         run: |
           chmod +x jwt-pizza-service/generatePizzaData.sh
