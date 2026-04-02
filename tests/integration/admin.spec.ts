@@ -1,5 +1,5 @@
 import { test, expect } from 'playwright-test-coverage';
-import { Role, User } from '../src/service/pizzaService';
+import { Role, User } from '../../src/service/pizzaService';
 
 let allUsers = [
   { id: 1, name: '常用名字', email: 'a@jwt.com', roles: [{ role: 'admin' }] },

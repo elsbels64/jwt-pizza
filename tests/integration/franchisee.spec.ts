@@ -1,5 +1,5 @@
 import { test, expect } from 'playwright-test-coverage';
-import { Role, User } from '../src/service/pizzaService';
+import { Role, User } from '../../src/service/pizzaService';
 
 async function basicInit(page: Page) {
     let loggedInUser: User | undefined;

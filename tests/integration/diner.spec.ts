@@ -1,5 +1,5 @@
 import { test, expect } from 'playwright-test-coverage';
-import { Role, User } from '../src/service/pizzaService';
+import { Role, User } from '../../src/service/pizzaService';
 
 test('home page', async ({ page }) => {
   await page.goto('/');

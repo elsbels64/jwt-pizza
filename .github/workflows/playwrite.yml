@@ -1,0 +1,99 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0.29
+        env:
+          MYSQL_ROOT_PASSWORD: tempdbpassword
+          MYSQL_DATABASE: pizza
+        ports:
+          - '3306:3306'
+        options: >-
+          --health-cmd "mysqladmin ping -ptempdbpassword"
+          --health-interval 10s
+          --health-start-period 10s
+          --health-timeout 5s
+          --health-retries 10
+
+    steps:
+      - name: Checkout frontend repo
+        uses: actions/checkout@v4
+
+      - name: Checkout backend repo
+        uses: actions/checkout@v4
+        with:
+          repository: your-github-username/jwt-pizza-service  # ← update this
+          path: jwt-pizza-service
+          token: ${{ secrets.GH_PAT }}  # ← only needed if backend repo is private
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+
+      - name: Set version
+        id: set_version
+        run: |
+          version=$(date +'%Y%m%d.%H%M%S')
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          printf '{"version": "%s" }' "$version" > public/version.json
+
+      - name: Build frontend
+        run: npm ci && npm run build
+
+      - name: Install backend dependencies
+        run: npm ci
+        working-directory: jwt-pizza-service
+
+      - name: Write backend config
+        run: |
+          echo "module.exports = {
+            jwtSecret: '${{ secrets.JWT_SECRET }}',
+            db: {
+              connection: {
+                host: '127.0.0.1',
+                user: 'root',
+                password: 'tempdbpassword',
+                database: 'pizza',
+                connectTimeout: 60000,
+              },
+              listPerPage: 10,
+            },
+            factory: {
+              url: 'https://pizza-factory.cs329.click',
+              apiKey: '${{ secrets.FACTORY_API_KEY }}',
+            },
+          };" > jwt-pizza-service/src/config.js
+
+      - name: Start backend server
+        run: npm start &
+        working-directory: jwt-pizza-service
+        env:
+          PORT: 5173
+
+      - name: Wait for backend to be ready
+        run: npx wait-on http://localhost:5173 --timeout 30000
+
+      - name: Run Playwright tests
+        run: |
+          npx playwright install --with-deps chromium
+          npm run test:coverage
+        env:
+          VITE_PIZZA_SERVICE_URL: http://localhost:5173  # ← points frontend at local backend
+
+      - name: Update coverage
+        run: |
+          coverage=$(jq '.total.lines.pct' coverage/coverage-summary.json)
+          color=$(echo "$coverage < 80" | bc | awk '{if ($1) print "red"; else print "green"}')
+          curl -s -X POST "https://pizza-factory.cs329.click/api/badge/${{ secrets.NET_ID }}/jwtpizzacoverage?label=Coverage&value=$coverage%25&color=$color" \
+            -H "authorization: bearer ${{ secrets.FACTORY_API_KEY }}"
