@@ -73,9 +73,8 @@ jobs:
       - name: Checkout backend repo
         uses: actions/checkout@v4
         with:
-          repository: your-github-username/jwt-pizza-service  # ← update this
+          repository: elsbels64/jwt-pizza-service  # ← update this
           path: jwt-pizza-service
-          token: ${{ secrets.GH_PAT }}  # ← only needed if backend repo is private
 
       - name: Setup Node
         uses: actions/setup-node@v4
