@@ -44,6 +44,11 @@ jobs:
       - name: Install frontend dependencies
         run: npm ci
 
+      - name: Override frontend env for integration tests
+        run: |
+          echo "VITE_PIZZA_SERVICE_URL=http://localhost:3000" > .env.local
+          echo "VITE_PIZZA_FACTORY_URL=https://pizza-factory.cs329.click" >> .env.local
+
       - name: Install backend dependencies
         run: npm ci
         working-directory: jwt-pizza-service
@@ -82,11 +87,7 @@ jobs:
       - name: Wait for backend to be ready
         run: npx wait-on http://localhost:3000 --timeout 30000
         continue-on-error: true  # don't stop here so we can see the logs
-      
-      - name: Check database state
-        run: |
-          mysql -h 127.0.0.1 -u root -ptempdbpassword -e "USE pizza; SELECT * FROM user;" 2>/dev/null || echo "No pizza database or user table yet"
-      
+  
       - name: Seed database
         run: |
           chmod +x jwt-pizza-service/generatePizzaData.sh
@@ -107,6 +108,13 @@ jobs:
 
       - name: Fail if backend never started
         run: npx wait-on http://localhost:3000 --timeout 5000
+
+      - name: Verify frontend env
+        run: |
+          echo "VITE_PIZZA_SERVICE_URL=$VITE_PIZZA_SERVICE_URL"
+          grep -r "VITE_PIZZA_SERVICE_URL" .env* || echo "No .env files found"
+        env:
+          VITE_PIZZA_SERVICE_URL: http://localhost:3000
 
       - name: Run integration tests
         run: |
