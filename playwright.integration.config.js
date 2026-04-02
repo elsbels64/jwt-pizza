@@ -77,7 +77,6 @@ export default defineConfig({
   ],
 
   /* Run your local dev server before starting the tests */
-  // playwright.integration.config.js
     webServer: {
         command: 'VITE_PIZZA_SERVICE_URL=http://localhost:3000 npm run dev',
         url: 'http://localhost:5173',
