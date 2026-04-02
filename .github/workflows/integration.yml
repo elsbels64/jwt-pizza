@@ -1,4 +1,4 @@
-name: CI Pipeline
+name: Integration Testing
 
 on:
   workflow_dispatch:  # manual trigger
