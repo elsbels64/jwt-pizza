@@ -116,6 +116,9 @@ jobs:
         env:
           VITE_PIZZA_SERVICE_URL: http://localhost:3000
 
+      - name: Print backend logs before tests
+        run: cat /tmp/backend.log
+
       - name: Run integration tests
         run: |
           npx playwright install --with-deps chromium
