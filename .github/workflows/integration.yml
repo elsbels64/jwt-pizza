@@ -143,7 +143,13 @@ jobs:
 
       - name: Check backend alive
         run: curl -s http://127.0.0.1:3000 || echo "BACKEND IS DOWN"
-      
+
+      - name: Check backend binding
+        run: |
+          ss -tlnp | grep 3000
+          curl -s http://127.0.0.1:3000
+          curl -s http://[::1]:3000
+            
       - name: Run integration tests
         run: |
           npx playwright install --with-deps chromium
