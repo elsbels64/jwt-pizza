@@ -116,9 +116,6 @@ jobs:
         env:
           VITE_PIZZA_SERVICE_URL: http://localhost:3000
 
-      - name: Print backend logs before tests
-        run: cat /tmp/backend.log
-
       - name: Test backend reachability
         run: |
           curl -v -X PUT http://localhost:3000/api/auth \
@@ -132,6 +129,9 @@ jobs:
             -H 'Access-Control-Request-Method: PUT' \
             -H 'Access-Control-Request-Headers: Content-Type'
 
+      - name: Print backend logs before tests
+        run: cat /tmp/backend.log
+      
       - name: Run integration tests
         run: |
           npx playwright install --with-deps chromium
