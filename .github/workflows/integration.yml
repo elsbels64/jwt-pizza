@@ -91,9 +91,8 @@ jobs:
       - name: Check backend binding
         run: |
           ss -tlnp | grep 3000
-          curl -v http://127.0.0.1:3000 
-          curl -v http://[::1]:3000
-  
+          curl -v http://127.0.0.1:3000
+          
       - name: Seed database
         run: |
           chmod +x jwt-pizza-service/generatePizzaData.sh
