@@ -77,10 +77,11 @@ export default defineConfig({
   ],
 
   /* Run your local dev server before starting the tests */
-  webServer: {
-    command: 'VITE_PIZZA_SERVICE_URL=http://127.0.0.1:3000 npm run dev',
-    url: 'http://localhost:5173',
-    reuseExistingServer: !process.env.CI,
-    timeout: process.env.PWDEBUG ? 120000 : 30000,
+  // playwright.integration.config.js
+    webServer: {
+        command: 'VITE_PIZZA_SERVICE_URL=http://localhost:3000 npm run dev',
+        url: 'http://localhost:5173',
+        reuseExistingServer: !process.env.CI,
+        timeout: process.env.PWDEBUG ? 120000 : 30000,
     },
 });
