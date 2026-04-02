@@ -83,6 +83,14 @@ jobs:
         working-directory: jwt-pizza-service
         env:
           PORT: 3000
+      
+      - name: Wait for MySQL to be ready
+        run: |
+          until mysql -h 127.0.0.1 -u root -ptempdbpassword -e "SELECT 1" 2>/dev/null; do
+            echo "Waiting for MySQL..."
+            sleep 2
+          done
+        timeout-minutes: 2
 
       - name: Wait for backend to be ready
         run: npx wait-on http://127.0.0.1:3000 --timeout 30000
