@@ -107,6 +107,11 @@ jobs:
             factory: {
               url: 'https://pizza-factory.cs329.click',
               apiKey: '${{ secrets.FACTORY_API_KEY }}',
+            }logging: {
+              source: 'integration-test',
+              endpointUrl: 'http://localhost',
+              accountId: 'none',
+              apiKey: 'none',
             },
           };" > jwt-pizza-service/src/config.js
 
