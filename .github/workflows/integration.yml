@@ -83,6 +83,11 @@ jobs:
       - name: Wait for backend to be ready
         run: npx wait-on http://localhost:3000 --timeout 30000
         continue-on-error: true  # don't stop here so we can see the logs
+      
+      - name: Seed database
+        run: |
+          chmod +x jwt-pizza-service/generatePizzaData.sh
+          jwt-pizza-service/generatePizzaData.sh http://localhost:3000
 
       - name: Print backend logs
         run: cat /tmp/backend.log
