@@ -119,6 +119,12 @@ jobs:
       - name: Print backend logs before tests
         run: cat /tmp/backend.log
 
+      - name: Test backend reachability
+        run: |
+          curl -v -X PUT http://localhost:3000/api/auth \
+            -H 'Content-Type: application/json' \
+            -d '{"email":"a@jwt.com","password":"admin"}'
+
       - name: Run integration tests
         run: |
           npx playwright install --with-deps chromium
