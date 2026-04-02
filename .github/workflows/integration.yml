@@ -66,7 +66,7 @@ jobs:
             factory: {
               url: 'https://pizza-factory.cs329.click',
               apiKey: '${{ secrets.FACTORY_API_KEY }}',
-            }logging: {
+            }, logging: {
               source: 'integration-test',
               endpointUrl: 'http://localhost',
               accountId: 'none',
