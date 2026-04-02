@@ -8,8 +8,49 @@ on:
 
 jobs:
   build:
-    name: Build
+    name: Build & Unit Tests
     runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+
+      - name: Set version
+        id: set_version
+        run: |
+          version=$(date +'%Y%m%d.%H%M%S')
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          printf '{"version": "%s" }' "$version" > public/version.json
+
+      - name: Build
+        run: npm ci && npm run build
+
+      - name: Upload pages artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: package
+          path: dist/
+
+      - name: Run unit tests
+        run: |
+          npx playwright install --with-deps chromium
+          npm run test:coverage
+
+      - name: Update coverage
+        run: |
+          coverage=$(jq '.total.lines.pct' coverage/coverage-summary.json)
+          color=$(echo "$coverage < 80" | bc | awk '{if ($1) print "red"; else print "green"}')
+          curl -s -X POST "https://pizza-factory.cs329.click/api/badge/${{ secrets.NET_ID }}/jwtpizzacoverage?label=Coverage&value=$coverage%25&color=$color" \
+            -H "authorization: bearer ${{ secrets.FACTORY_API_KEY }}"
+
+  integration:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    needs: build  # only runs if build + unit tests pass
     services:
       mysql:
         image: mysql:8.0.29
@@ -41,15 +82,8 @@ jobs:
         with:
           node-version: '22.x'
 
-      - name: Set version
-        id: set_version
-        run: |
-          version=$(date +'%Y%m%d.%H%M%S')
-          echo "version=$version" >> "$GITHUB_OUTPUT"
-          printf '{"version": "%s" }' "$version" > public/version.json
-
-      - name: Build frontend
-        run: npm ci && npm run build
+      - name: Install frontend dependencies
+        run: npm ci
 
       - name: Install backend dependencies
         run: npm ci
@@ -79,21 +113,23 @@ jobs:
         run: npm start &
         working-directory: jwt-pizza-service
         env:
-          PORT: 5173
+          PORT: 3000
 
       - name: Wait for backend to be ready
-        run: npx wait-on http://localhost:5173 --timeout 30000
+        run: npx wait-on http://localhost:3000 --timeout 30000
 
-      - name: Run Playwright tests
+      - name: Run integration tests
         run: |
           npx playwright install --with-deps chromium
-          npm run test:coverage
+          npx playwright test --config=playwright.integration.config.js
         env:
-          VITE_PIZZA_SERVICE_URL: http://localhost:5173  # ← points frontend at local backend
+          VITE_PIZZA_SERVICE_URL: http://localhost:3000  # ← points frontend at local backend
+          CI: true
 
-      - name: Update coverage
-        run: |
-          coverage=$(jq '.total.lines.pct' coverage/coverage-summary.json)
-          color=$(echo "$coverage < 80" | bc | awk '{if ($1) print "red"; else print "green"}')
-          curl -s -X POST "https://pizza-factory.cs329.click/api/badge/${{ secrets.NET_ID }}/jwtpizzacoverage?label=Coverage&value=$coverage%25&color=$color" \
-            -H "authorization: bearer ${{ secrets.FACTORY_API_KEY }}"
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-integration-report
+          path: playwright-report/
+          retention-days: 7
