@@ -68,7 +68,7 @@ jobs:
               apiKey: '${{ secrets.FACTORY_API_KEY }}',
             }, logging: {
               source: 'integration-test',
-              endpointUrl: 'http://localhost',
+              endpointUrl: 'http://localhost:9999',
               accountId: 'none',
               apiKey: 'none',
             },
