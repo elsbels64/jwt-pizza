@@ -92,7 +92,7 @@ jobs:
         run: |
           ss -tlnp | grep 3000
           curl -v http://127.0.0.1:3000
-          
+
       - name: Seed database
         run: |
           chmod +x jwt-pizza-service/generatePizzaData.sh
@@ -133,6 +133,13 @@ jobs:
 
       - name: Print backend logs before tests
         run: cat /tmp/backend.log
+
+      - name: Debug env files
+        run: |
+          echo "=== .env.development ==="
+          cat .env.development
+          echo "=== .env.local (if exists) ==="
+          cat .env.local 2>/dev/null || echo "no .env.local"
       
       - name: Run integration tests
         run: |
