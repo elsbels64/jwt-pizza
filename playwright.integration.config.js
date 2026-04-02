@@ -31,6 +31,9 @@ export default defineConfig({
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     baseURL: 'http://localhost:5173',
+    launchOptions: {
+        args: ['--disable-web-security', '--no-sandbox'],
+    },
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',  // ← add this
     video: 'retain-on-failure',
@@ -75,7 +78,7 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: 'VITE_PIZZA_SERVICE_URL=http://127.0.0.1:3000 npm run dev',
+    command: 'VITE_PIZZA_SERVICE_URL=http://localhost:3000 npm run dev',
     url: 'http://localhost:5173',
     reuseExistingServer: !process.env.CI,
     timeout: process.env.PWDEBUG ? 120000 : 30000,
