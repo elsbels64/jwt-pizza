@@ -140,6 +140,9 @@ jobs:
           cat .env.development
           echo "=== .env.local (if exists) ==="
           cat .env.local 2>/dev/null || echo "no .env.local"
+
+      - name: Check backend alive
+        run: curl -s http://127.0.0.1:3000 || echo "BACKEND IS DOWN"
       
       - name: Run integration tests
         run: |
