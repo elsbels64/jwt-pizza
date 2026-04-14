@@ -50,3 +50,17 @@
 | Description    | change order to non-existent franchise.                 |
 | Images         | ![order franchise 44 user req and resp](./images/attack5.png) <br/>.  placed an order with non-existing franchise |
 | Corrections    | check that franchize exists before ordering   |
+
+# 6
+| Item           | Result                                                                         |
+| -------------- | ------------------------------------------------------------------------------ |
+| Date           | June 13, 2026                                                                  |
+| Target         | pizza.elisew.click                                                       |
+| Classification | injection                                                                    |
+| Severity       | 0                                                                            |
+| Description    | SQL injection through user login to try to delete database users. User's were protected                 |
+| Images         | ![attempt 1 user req and resp](./images/attack6.png) <br/>. |
+| Images         | ![attempt 2 user req and resp](./images/attack6b.png) <br/>. |
+| Images         | ![attempt 3 user req and resp](./images/attack6c.png) <br/>. User delete attempts.|
+| Images         | ![regular login after attempted user delete req and resp](./images/attack6d.png) <br/>. User delete attempts did not work. Can still log in previous user.|
+| Corrections    | None. code is properly protecting against SQL injections   |
