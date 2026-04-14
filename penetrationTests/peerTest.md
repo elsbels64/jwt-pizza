@@ -6,7 +6,7 @@
 | Classification | Broken Access Control                                                                      |
 | Severity       | 1                                                                              |
 | Description    | Register existing user with different email.                 |
-| Images         | ![Dead database](deadDatabase.png) <br/> can still log into past user, but admin priveleges may have been removed. |
+| Images         | ![admin trying to access franchises](./images/attack1.png) <br/> can still log into past user, but admin priveleges may have been removed. |
 | Corrections    | Check if user already exists before registering.                                                          |
 # 2
 | Item           | Result                                                                         |
