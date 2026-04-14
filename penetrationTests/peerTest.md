@@ -16,7 +16,7 @@
 | Classification | Broken Access Control                                                                     |
 | Severity       | 0                                                                              |
 | Description    | Order with previously logged out user.                 |
-| Images         | ![Dead database](deadDatabase.png) <br/>. autentication missing.|
+| Images         | ![logged out user req and resp](./images/attack2.png) <br/>. autentication missing.|
 | Corrections    | None. Code works properly        |
 # 3
 | Item           | Result                                                                         |
@@ -25,9 +25,9 @@
 | Target         | pizza.elisew.click                                                       |
 | Classification | Broken Access Control                                                                      |
 | Severity       | 3                                                                             |
-| Description    | Altering the price of the order to $0, $-1000000000, $-1, and $100000000.                 |
-| Images         | ![Dead database](deadDatabase.png) <br/>. ![Dead database](deadDatabase.png) <br/>.
- ![Dead database](deadDatabase.png) <br/>. ![Dead database](deadDatabase.png) <br/>. could order for 0 and negative 1, but the larger values were out of range.|
+| Description    | Altering the price of the order to $0, -$1000000000, $-1, and $100000000.                 |
+| Images         | ![order -$1000000000 out user req and resp](./images/attack3b.png) <br/>. !![order -$1000000000 out user req and resp](./images/attack3b.png) <br/>.
+ ![order -$1 out user req and resp](./images/attack3c.png) <br/>. ![order $100000000 out user req and resp](./images/attack3d.png) <br/>. could order for 0 and negative 1, but the larger values were out of range.|
 | Corrections    | double check that price matches database item order price. Don't allow negative numbers or 0.      |
 # 4
 | Item           | Result                                                                         |
@@ -37,7 +37,7 @@
 | Classification | Broken Access Control                                                                      |
 | Severity       | 3                                                                           |
 | Description    | change order to non-existent store.                 |
-| Images         | ![Dead database](deadDatabase.png) <br/>. placed an order with non-existing store|
+| Images         | ![order store 1000 user req and resp](./images/attack4.png) <br/>. placed an order with non-existing store|
 | Corrections    | check that store exists before ordering   |
 
 # 5
@@ -48,5 +48,5 @@
 | Classification | Broken Access Control                                                                     |
 | Severity       | 3                                                                            |
 | Description    | change order to non-existent franchise.                 |
-| Images         | ![Dead database](deadDatabase.png) <br/>.  placed an order with non-existing franchise |
+| Images         | ![order franchise 44 user req and resp](./images/attack5.png) <br/>.  placed an order with non-existing franchise |
 | Corrections    | check that franchize exists before ordering   |
