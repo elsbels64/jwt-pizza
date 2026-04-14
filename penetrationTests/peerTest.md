@@ -27,7 +27,7 @@
 | Severity       | 3                                                                             |
 | Description    | Altering the price of the order to $0, -$1000000000, $-1, and $100000000.                 |
 | Images         | ![order -$1000000000 out user req and resp](./images/attack3b.png) <br/>. !![order -$1000000000 out user req and resp](./images/attack3b.png) <br/>.
- ![order -$1 out user req and resp](./images/attack3c.png) <br/>. ![order $100000000 out user req and resp](./images/attack3d.png) <br/>. could order for 0 and negative 1, but the larger values were out of range.|
+ ![order -$1 out user req and resp](./images/attack3c.png) <br/>. ![order $100000000 out user req and resp](./images/attack3d.png) <br/>. could order for 0 and negative 1, but the larger values were out of range.
 | Corrections    | double check that price matches database item order price. Don't allow negative numbers or 0.      |
 # 4
 | Item           | Result                                                                         |
