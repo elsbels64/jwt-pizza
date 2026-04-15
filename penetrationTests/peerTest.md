@@ -257,4 +257,13 @@
 
 ## 3. Combined Summary of Learnings
 
+A lot of security issues are caused simply because you don’t sanitize the user input. Even if there’s no way to enter weird input from the website, there might still be workarounds for malicious users to enter weird input (like editing the input through Burp), so it’s best to always err on the side of being over-cautious. When updating user information, it is better to only send the parts which need to be modified instead of the whole object. By sending the entire user object from the client to the server, it allows an attacker to modify the database contents without needing access to the database. In terms of security posture, it is best to treat anything client side as untrusted and then to sanitize and validate it before using it. 
+
+Related to treating client side inputs as untrusted, anything involving pricing and purchasing should be handled server side to prevent tampering and replay attacks. Failure to do so allows anyone to modify their order and falsify the actual amount spent. Using one-time tokens and hashing is a good way to prevent replay attacks, as it ensures the integrity of the message and shows that it hasn’t been modified from the source. 
+
+In terms of information availability, for fields which handle sensitive information, the correct field-type should be used to avoid leaking information. When doing anything related to passwords, hashing and salting should be used to protect the user’s credentials, both in-transit and at rest. In an ideal world, the best password is one that you don’t store, yet validates that they are who they claim to be.
+
+With regards to the internal workings of the application, exposing stack traces and raw errors to the front end should be avoided. Care should be taken to not pass error messages to the browser and instead logged internally. As a result, it increases the amount of effort the attacker has to spend on determining how your application works. 
+
+Through this penetration testing assignment, we identified several key security issues to be aware of in our jwt-pizza websites and to look out for in any future web applications we create. These issues are: sanitizing and validating user inputs, handling purchasing server side, using hashing and tokens to protect sensitive information, and not leaking internal application structure and state.
 
