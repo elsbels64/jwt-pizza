@@ -2,7 +2,7 @@
 | Item           | Result                                                                         |
 | -------------- | ------------------------------------------------------------------------------ |
 | Date           | June 13, 2026                                                                  |
-| Target         | pizza.elisew.click                                                       |
+| Target         | pizza.elisew.click/register                                                       |
 | Classification | Broken Access Control                                                                      |
 | Severity       | 2                                                                             |
 | Description    | Attempted to re-register an existing user account to overwrite credentials/privileges                 |
@@ -12,7 +12,7 @@
 | Item           | Result                                                                         |
 | -------------- | ------------------------------------------------------------------------------ |
 | Date           | June 13, 2026                                                                  |
-| Target         | pizza.elisew.click                                                       |
+| Target         | pizza.elisew.click/api/order   POST                                                       |
 | Classification | Broken Access Control                                                                     |
 | Severity       | 0                                                                              |
 | Description    | Order with previously logged out user. User unauthorized |
@@ -22,7 +22,7 @@
 | Item           | Result                                                                         |
 | -------------- | ------------------------------------------------------------------------------ |
 | Date           | June 13, 2026                                                                  |
-| Target         | pizza.elisew.click                                                       |
+| Target         | pizza.elisew.click/api/order   POST                                                       |
 | Classification | Broken Access Control                                                                      |
 | Severity       | 2                                                                            |
 | Description    | Altering the price of the order to $0, -$1000000000, $-1, and $100000000. Could order for 0 and -1, but the larger values were out of range.              |
@@ -33,7 +33,7 @@
 | Item           | Result                                                                         |
 | -------------- | ------------------------------------------------------------------------------ |
 | Date           | June 13, 2026                                                                  |
-| Target         | pizza.elisew.click                                                       |
+| Target         | pizza.elisew.click/api/order   POST                                                       |
 | Classification | Broken Access Control                                                                      |
 | Severity       | 2                                                                           |
 | Description    | change order to non-existent store. was able to order with a non-existing store. order successfully placed                |
@@ -44,18 +44,18 @@
 | Item           | Result                                                                         |
 | -------------- | ------------------------------------------------------------------------------ |
 | Date           | June 13, 2026                                                                  |
-| Target         | pizza.elisew.click                                                       |
+| Target         | pizza.elisew.click/api/order   POST                                                       |
 | Classification | Broken Access Control                                                                     |
 | Severity       | 2                                                                            |
 | Description    | change order to non-existent franchise. order successfully placed               |
 | Images         | ![order franchise 44 user req and resp](./images/attack5.png) <br/>.  placed an order with non-existing franchise |
-| Corrections    | check that franchize exists before ordering   |
+| Corrections    | check that franchise exists before ordering   |
 
 # 6
 | Item           | Result                                                                         |
 | -------------- | ------------------------------------------------------------------------------ |
 | Date           | June 13, 2026                                                                  |
-| Target         | pizza.elisew.click                                                       |
+| Target         | pizza.elisew.click/api/auth PUT       |
 | Classification | injection                                                                    |
 | Severity       | 0                                                                            |
 | Description    | SQL injection through user login to try to delete database users. SQL injection failed. User's were protected |
