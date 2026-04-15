@@ -2,17 +2,17 @@
 | Item           | Result                                                                         |
 | -------------- | ------------------------------------------------------------------------------ |
 | Date           | June 13, 2026                                                                  |
-| Target         | pizza.elisew.click                                                       |
+| Target         | https://pizza.jbreiter.click/register                                                       |
 | Classification | Broken Access Control                                                                      |
 | Severity       | 2                                                                             |
-| Description    | Attempted to re-register an existing user account to overwrite credentials/privileges.  can register for user with the same name, but when you go to login with that new user, it won't let you.             |
+| Description    | Attempted to re-register an existing user account to overwrite credentials/privileges.  can register for user with the same name, but when you go to login with that new user, it won't let you. did not affect admin controls            |
 | Images         | ![admin trying to access franchises](./images/attack1.png) <br/>successful register for new user. <br/>unsuccessful login for newly registered user. |
 | Corrections    | Check if user already exists before registering.                                                          |
 # 2
 | Item           | Result                                                                         |
 | -------------- | ------------------------------------------------------------------------------ |
 | Date           | June 13, 2026                                                                  |
-| Target         | pizza.elisew.click                                                       |
+| Target         |https://pizza.jbreiter.click/api/order   POST                                                     |
 | Classification | Broken Access Control                                                                     |
 | Severity       | 0                                                                              |
 | Description    | Order with previously logged out user. User unauthorized |
@@ -22,7 +22,7 @@
 | Item           | Result                                                                         |
 | -------------- | ------------------------------------------------------------------------------ |
 | Date           | June 13, 2026                                                                  |
-| Target         | pizza.elisew.click                                                       |
+| Target         | https://pizza.jbreiter.click/api/order   POST           |
 | Classification | Broken Access Control                                                                      |
 | Severity       | 2                                                                            |
 | Description    | Altering the price of the order to $0, -$1000000000, $-1, and $100000000. Could order for all values 0 and -1, but the larger values were truncated to 99.999 or -99.999.              |
@@ -33,7 +33,7 @@
 | Item           | Result                                                                         |
 | -------------- | ------------------------------------------------------------------------------ |
 | Date           | June 13, 2026                                                                  |
-| Target         | pizza.elisew.click                                                       |
+| Target         | https://pizza.jbreiter.click/api/order   POST     |
 | Classification | Broken Access Control                                                                      |
 | Severity       | 2                                                                           |
 | Description    | change order to non-existent store. order successfully placed                |
@@ -44,9 +44,9 @@
 | Item           | Result                                                                         |
 | -------------- | ------------------------------------------------------------------------------ |
 | Date           | June 13, 2026                                                                  |
-| Target         | pizza.elisew.click                                                       |
+| Target         |https://pizza.jbreiter.click/api/order   POST   |
 | Classification | Broken Access Control                                                                     |
 | Severity       | 2                                                                            |
 | Description    | change order to non-existent franchise. order successfully placed               |
 | Images         | ![order franchise 44 user req and resp](./images/attack5.png) <br/>.  placed an order with non-existing franchise |
-| Corrections    | check that franchize exists before ordering   |
+| Corrections    | check that franchise exists before ordering   |
