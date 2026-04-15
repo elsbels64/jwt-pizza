@@ -1,63 +1,255 @@
-# 1
-| Item           | Result                                                                         |
-| -------------- | ------------------------------------------------------------------------------ |
-| Date           | June 13, 2026                                                                  |
-| Target         | pizza.elisew.click                                                       |
-| Classification | Broken Access Control                                                                      |
-| Severity       | 1                                                                              |
-| Description    | Register existing user with different email.                 |
-| Images         | ![admin trying to access franchises](./images/attack1.png) <br/> can still log into past user, but admin priveleges may have been removed. |
-| Corrections    | Check if user already exists before registering.                                                          |
-# 2
-| Item           | Result                                                                         |
-| -------------- | ------------------------------------------------------------------------------ |
-| Date           | June 13, 2026                                                                  |
-| Target         | pizza.elisew.click                                                       |
-| Classification | Broken Access Control                                                                     |
-| Severity       | 0                                                                              |
-| Description    | Order with previously logged out user.                 |
-| Images         | ![logged out user req and resp](./images/attack2.png) <br/>. autentication missing.|
-| Corrections    | None. Code works properly        |
-# 3
-| Item           | Result                                                                         |
-| -------------- | ------------------------------------------------------------------------------ |
-| Date           | June 13, 2026                                                                  |
-| Target         | pizza.elisew.click                                                       |
-| Classification | Broken Access Control                                                                      |
-| Severity       | 3                                                                             |
-| Description    | Altering the price of the order to $0, -$1000000000, $-1, and $100000000.                 |
-| Images         | ![order -$1000000000 out user req and resp](./images/attack3b.png) <br/>. !![order -$1000000000 out user req and resp](./images/attack3b.png) <br/>.
- ![order -$1 out user req and resp](./images/attack3c.png) <br/>. ![order $100000000 out user req and resp](./images/attack3d.png) <br/>. could order for 0 and negative 1, but the larger values were out of range. |
-| Corrections    | double check that price matches database item order price. Don't allow negative numbers or 0.      |
-# 4
-| Item           | Result                                                                         |
-| -------------- | ------------------------------------------------------------------------------ |
-| Date           | June 13, 2026                                                                  |
-| Target         | pizza.elisew.click                                                       |
-| Classification | Broken Access Control                                                                      |
-| Severity       | 3                                                                           |
-| Description    | change order to non-existent store.                 |
-| Images         | ![order store 1000 user req and resp](./images/attack4.png) <br/>. placed an order with non-existing store|
-| Corrections    | check that store exists before ordering   |
+# Penetration Test Report: JWT Pizza
 
-# 5
-| Item           | Result                                                                         |
-| -------------- | ------------------------------------------------------------------------------ |
-| Date           | June 13, 2026                                                                  |
-| Target         | pizza.elisew.click                                                       |
-| Classification | Broken Access Control                                                                     |
-| Severity       | 3                                                                            |
-| Description    | change order to non-existent franchise.                 |
-| Images         | ![order franchise 44 user req and resp](./images/attack5.png) <br/>.  placed an order with non-existing franchise |
-| Corrections    | check that franchize exists before ordering   |
+**Team Members:**
+- Elise Wirthlin
+- Josh Breiter
 
-# 6
-| Item           | Result                                                                         |
-| -------------- | ------------------------------------------------------------------------------ |
-| Date           | June 13, 2026                                                                  |
-| Target         | pizza.elisew.click                                                       |
-| Classification | injection                                                                    |
-| Severity       | 0                                                                            |
-| Description    | SQL injection through user login to try to delete database users. User's were protected                 |
-| Images         | ![attempt 1 user req and resp](./images/attack6.png) <br/>.  ![attempt 2 user req and resp](./images/attack6b.png) <br/>. = ![attempt 3 user req and resp](./images/attack6c.png) <br/>. User delete attempts. <br/>.  ![regular login after attempted user delete req and resp](./images/attack6d.png) <br/>. User delete attempts did not work. Can still log in previous user.|
-| Corrections    | None. code is properly protecting against SQL injections   |
+---
+
+## 1. Self Attack
+
+### Peer 1: Elise Wirthlin
+*At least 5 attacks documented below.*
+
+#### Attack 1.1
+| Item           | Result |
+| -------------- | ------ |
+| Date           |        |
+| Target         |        |
+| Classification |        |
+| Severity       |        |
+| Description    |        |
+| Images         |        |
+| Corrections    |        |
+
+
+#### Attack 1.2
+| Item           | Result |
+| -------------- | ------ |
+| Date           |        |
+| Target         |        |
+| Classification |        |
+| Severity       |        |
+| Description    |        |
+| Images         |        |
+| Corrections    |        |
+
+#### Attack 1.3
+| Item           | Result |
+| -------------- | ------ |
+| Date           |        |
+| Target         |        |
+| Classification |        |
+| Severity       |        |
+| Description    |        |
+| Images         |        |
+| Corrections    |        |
+
+#### Attack 1.4
+| Item           | Result |
+| -------------- | ------ |
+| Date           |        |
+| Target         |        |
+| Classification |        |
+| Severity       |        |
+| Description    |        |
+| Images         |        |
+| Corrections    |        |
+
+#### Attack 1.5
+| Item           | Result |
+| -------------- | ------ |
+| Date           |        |
+| Target         |        |
+| Classification |        |
+| Severity       |        |
+| Description    |        |
+| Images         |        |
+| Corrections    |        |
+
+---
+
+### Peer 2: Josh Breiter
+*At least 5 attacks documented below.*
+
+#### Attack 2.1
+| Item           | Result |
+| -------------- | ------ |
+| Date           |        |
+| Target         |        |
+| Classification |        |
+| Severity       |        |
+| Description    |        |
+| Images         |        |
+| Corrections    |        |
+
+#### Attack 2.2
+| Item           | Result |
+| -------------- | ------ |
+| Date           |        |
+| Target         |        |
+| Classification |        |
+| Severity       |        |
+| Description    |        |
+| Images         |        |
+| Corrections    |        |
+
+#### Attack 2.3
+| Item           | Result |
+| -------------- | ------ |
+| Date           |        |
+| Target         |        |
+| Classification |        |
+| Severity       |        |
+| Description    |        |
+| Images         |        |
+| Corrections    |        |
+
+#### Attack 2.4
+| Item           | Result |
+| -------------- | ------ |
+| Date           |        |
+| Target         |        |
+| Classification |        |
+| Severity       |        |
+| Description    |        |
+| Images         |        |
+| Corrections    |        |
+
+#### Attack 2.5
+| Item           | Result |
+| -------------- | ------ |
+| Date           |        |
+| Target         |        |
+| Classification |        |
+| Severity       |        |
+| Description    |        |
+| Images         |        |
+| Corrections    |        |
+
+---
+
+## 2. Peer Attack
+
+### Peer 1 ([Name]) Attack on Peer 2 ([Name])
+*At least 5 attacks documented below.*
+
+#### Attack P1.1
+| Item           | Result |
+| -------------- | ------ |
+| Date           |        |
+| Target         |        |
+| Classification |        |
+| Severity       |        |
+| Description    |        |
+| Images         |        |
+| Corrections    |        |
+
+#### Attack P1.2
+| Item           | Result |
+| -------------- | ------ |
+| Date           |        |
+| Target         |        |
+| Classification |        |
+| Severity       |        |
+| Description    |        |
+| Images         |        |
+| Corrections    |        |
+
+#### Attack P1.3
+| Item           | Result |
+| -------------- | ------ |
+| Date           |        |
+| Target         |        |
+| Classification |        |
+| Severity       |        |
+| Description    |        |
+| Images         |        |
+| Corrections    |        |
+
+#### Attack P1.4
+| Item           | Result |
+| -------------- | ------ |
+| Date           |        |
+| Target         |        |
+| Classification |        |
+| Severity       |        |
+| Description    |        |
+| Images         |        |
+| Corrections    |        |
+
+#### Attack P1.5
+| Item           | Result |
+| -------------- | ------ |
+| Date           |        |
+| Target         |        |
+| Classification |        |
+| Severity       |        |
+| Description    |        |
+| Images         |        |
+| Corrections    |        |
+
+---
+
+### Peer 2 ([Name]) Attack on Peer 1 ([Name])
+*At least 5 attacks documented below.*
+
+#### Attack P2.1
+| Item           | Result |
+| -------------- | ------ |
+| Date           |        |
+| Target         |        |
+| Classification |        |
+| Severity       |        |
+| Description    |        |
+| Images         |        |
+| Corrections    |        |
+
+#### Attack P2.2
+| Item           | Result |
+| -------------- | ------ |
+| Date           |        |
+| Target         |        |
+| Classification |        |
+| Severity       |        |
+| Description    |        |
+| Images         |        |
+| Corrections    |        |
+
+#### Attack P2.3
+| Item           | Result |
+| -------------- | ------ |
+| Date           |        |
+| Target         |        |
+| Classification |        |
+| Severity       |        |
+| Description    |        |
+| Images         |        |
+| Corrections    |        |
+
+#### Attack P2.4
+| Item           | Result |
+| -------------- | ------ |
+| Date           |        |
+| Target         |        |
+| Classification |        |
+| Severity       |        |
+| Description    |        |
+| Images         |        |
+| Corrections    |        |
+
+#### Attack P2.5
+| Item           | Result |
+| -------------- | ------ |
+| Date           |        |
+| Target         |        |
+| Classification |        |
+| Severity       |        |
+| Description    |        |
+| Images         |        |
+| Corrections    |        |
+
+---
+
+## 3. Combined Summary of Learnings
+
