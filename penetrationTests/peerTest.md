@@ -27,7 +27,7 @@
 | Severity       | 3                                                                             |
 | Description    | Altering the price of the order to $0, -$1000000000, $-1, and $100000000.                 |
 | Images         | ![order -$1000000000 out user req and resp](./images/attack3b.png) <br/>. !![order -$1000000000 out user req and resp](./images/attack3b.png) <br/>.
- ![order -$1 out user req and resp](./images/attack3c.png) <br/>. ![order $100000000 out user req and resp](./images/attack3d.png) <br/>. could order for 0 and negative 1, but the larger values were out of range.
+ ![order -$1 out user req and resp](./images/attack3c.png) <br/>. ![order $100000000 out user req and resp](./images/attack3d.png) <br/>. could order for 0 and negative 1, but the larger values were out of range. |
 | Corrections    | double check that price matches database item order price. Don't allow negative numbers or 0.      |
 # 4
 | Item           | Result                                                                         |
@@ -59,8 +59,5 @@
 | Classification | injection                                                                    |
 | Severity       | 0                                                                            |
 | Description    | SQL injection through user login to try to delete database users. User's were protected                 |
-| Images         | ![attempt 1 user req and resp](./images/attack6.png) <br/>. |
-| Images         | ![attempt 2 user req and resp](./images/attack6b.png) <br/>. |
-| Images         | ![attempt 3 user req and resp](./images/attack6c.png) <br/>. User delete attempts.|
-| Images         | ![regular login after attempted user delete req and resp](./images/attack6d.png) <br/>. User delete attempts did not work. Can still log in previous user.|
+| Images         | ![attempt 1 user req and resp](./images/attack6.png) <br/>.  ![attempt 2 user req and resp](./images/attack6b.png) <br/>. = ![attempt 3 user req and resp](./images/attack6c.png) <br/>. User delete attempts. <br/>.  ![regular login after attempted user delete req and resp](./images/attack6d.png) <br/>. User delete attempts did not work. Can still log in previous user.|
 | Corrections    | None. code is properly protecting against SQL injections   |
