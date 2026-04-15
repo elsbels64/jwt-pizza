@@ -148,7 +148,7 @@
 | Classification | Broken Access Control                                                                      |
 | Severity       | 2                                                                             |
 | Description    | Attempted to re-register an existing user account to overwrite credentials/privileges.  can register for user with the same name, but when you go to login with that new user, it won't let you. did not affect admin controls            |
-| Images         | ![successful register](.\images\attack1a.jbreiter.click.png) <br/>successful register for new user. <br/> ![unsuccessful login](.\images\attack1b.jbreiter.click.png)unsuccessful login for newly registered user. |
+| Images         | ![successful register](.\images\attack1a.jbreiter.click.png) <br/>successful register for new user. <br/> ![unsuccessful login](./images/attack1b.jbreiter.click.png) unsuccessful login for newly registered user. |
 | Corrections    | Check if user already exists before registering.                                                          |
 #### Attack P2.2
 | Item           | Result                                                                         |
@@ -158,7 +158,7 @@
 | Classification | Broken Access Control                                                                     |
 | Severity       | 0                                                                              |
 | Description    | Order with previously logged out user. User unauthorized |
-| Images         | ![logged out user req and resp](.\images\attack2.jbreiter.click.png) <br/>. autentication missing.|
+| Images         | ![logged out user req and resp](./images/attack2.jbreiter.click.png) <br/>. autentication missing.|
 | Corrections    | None. Code works properly        |
 #### Attack P2.3
 | Item           | Result                                                                         |
@@ -168,7 +168,7 @@
 | Classification | Broken Access Control                                                                      |
 | Severity       | 2                                                                            |
 | Description    | Altering the price of the order to $0, -$1000000000, $-1, and $100000000. Could order for all values 0 and -1, but the larger values were truncated to 99.999 or -99.999.              |
-| Images         | ![order logs for all of the changed prices](.\images\attack3f.jbreiter.click.png)|
+| Images         | ![order logs for all of the changed prices](./images/attack1f.jbreiter.click.png)|
 | Corrections    | double check that price matches database item order price. Don't allow negative numbers, 0, or exceptionally large numbers.      |
 #### Attack P2.4
 | Item           | Result                                                                         |
@@ -178,7 +178,7 @@
 | Classification | Broken Access Control                                                                      |
 | Severity       | 2                                                                           |
 | Description    | change order to non-existent store. order successfully placed                |
-| Images         | ![order store 32 user req and resp](.\images\attack4.jbreiter.click.png) <br/>. placed an order with non-existing store|
+| Images         | ![order store 32 user req and resp](./images/attack4.jbreiter.click.png) <br/>. placed an order with non-existing store|
 | Corrections    | check that store exists before ordering   |
 
 #### Attack P2.5
@@ -189,7 +189,7 @@
 | Classification | Broken Access Control                                                                     |
 | Severity       | 2                                                                            |
 | Description    | change order to non-existent franchise. order successfully placed               |
-| Images         | ![order franchise 4000 user req and resp](.\images\attack5.jbreiter.click.png) <br/>.  placed an order with non-existing franchise |
+| Images         | ![order franchise 4000 user req and resp](./images/attack5.jbreiter.click.png) <br/>.  placed an order with non-existing franchise |
 | Corrections    | check that franchise exists before ordering   |
 
 
